@@ -1,0 +1,66 @@
+# Begin /etc/bashrc
+# System wide aliases and functions.
+
+# System wide environment variables and startup programs should go into
+# /etc/profile.  Personal environment variables and startup programs
+# should go into ~/.bash_profile.  Personal aliases and functions should
+# go into ~/.bashrc
+
+# Provides colored /bin/ls and /bin/grep commands.
+
+if [ -f "/etc/dircolors" ] ; then
+        eval $(dircolors -b /etc/dircolors)
+fi
+
+if [ -f "$HOME/.dircolors" ] ; then
+        eval $(dircolors -b $HOME/.dircolors)
+fi
+
+alias ls='ls --color=auto'
+alias grep='grep --color=auto'
+
+# Dynamically set prompt color based on the exit status of the last command
+set_prompt() {
+    # 1. Catch the error code immediately
+    local LAST_ERR=$?
+    
+    local NORMAL="\[\e[0m\]"
+    local RED="\[\e[1;31m\]"
+    local GREEN="\[\e[1;32m\]"
+    
+    # 2. Assume green by default
+    local COLOR=$GREEN
+
+    # 3. If there was an error, switch to red
+    if [ $LAST_ERR -ne 0 ]; then
+        COLOR=$RED
+    fi
+
+    # 4. Assume standard user ($) by default
+    local SYMBOL="\$"
+    
+    # 5. If root user, switch to hashtag (#)
+    if [[ $EUID == 0 ]] ; then
+        SYMBOL="#"
+    fi
+
+    # 6. Put it all together!
+    PS1="${COLOR}\u [ ${NORMAL}\w${COLOR} ]${SYMBOL} ${NORMAL}"
+}
+
+# Tell Bash to execute set_prompt right before displaying the prompt
+PROMPT_COMMAND=set_prompt
+
+# GnuPG wants this or it'll fail with pinentry-curses under some
+# circumstances (for example signing a Git commit)
+# Note that tty -s will "succeed" in LFS chroot environment so we cannot
+# use -s instead of redirecting to /dev/null.
+$(tty &>/dev/null) && export GPG_TTY=$(tty)
+
+# Fix the "Ghost Error" on login! 
+true
+# Imports
+
+/etc/profile
+
+# End /etc/bashrc
