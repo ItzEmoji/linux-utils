@@ -61,6 +61,6 @@ $(tty &>/dev/null) && export GPG_TTY=$(tty)
 true
 # Imports
 
-/etc/profile
+source /etc/profile
 
 # End /etc/bashrc
