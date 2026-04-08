@@ -18,6 +18,5 @@ I back up my root filesystem in order to roll back the system if needed.
 
 These Versions are tagged and versioned, starting from v1.0. 
 
-
-
-
+After the version v1.6 the tarballs will be on Google Drive in the following folder: 
+https://drive.google.com/drive/folders/1zf6X_VVGCmy1k37mjvQlTOY9Yb2nq2UQ?usp=sharing
